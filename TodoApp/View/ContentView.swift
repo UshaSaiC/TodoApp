@@ -13,18 +13,34 @@ struct ContentView: View {
     
     @State private var showingAddTodoView: Bool = false
     
+    // @FetchRequest(
+    //     sortDescriptors: [NSSortDescriptor(keyPath: \Todo.name, ascending: true)],
+    //     animation: .default)
+    // private var todos: FetchedResults<Todo>
+    
+    // we are saving the todo items by name and storing them in ascending order in database and retrieving it and storing it to todos variable
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Todo.id, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Todo>
+        entity: Todo.entity(),
+        sortDescriptors: [NSSortDescriptor(
+            keyPath: \Todo.name,
+            ascending: true)])
+    var todos: FetchedResults<Todo>
     
     var body: some View {
         NavigationView {
-            List(0..<5) { item in
-                Text("Hello")
+            List {
+                ForEach(self.todos, id: \.self) {todo in
+                    HStack {
+                        Text(todo.name ?? "Unknown")
+                        Spacer()
+                        Text(todo.priority ?? "Unknown")
+                    }
+                }
+                .onDelete(perform: deleteTodo)
             }
             .navigationBarTitle("Todo", displayMode: .inline)
             .navigationBarItems(
+                leading: EditButton(),
                 trailing:
                     Button(action: {
                         self.showingAddTodoView.toggle()
@@ -52,15 +68,15 @@ struct ContentView: View {
         }
     }
     
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(managedObjectContext.delete)
+    private func deleteTodo(at offsets: IndexSet) {
+        for index in offsets {
+            let todo = todos[index]
+            managedObjectContext.delete(todo)
             
             do {
                 try managedObjectContext.save()
             } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                print(error)
             }
         }
     }
