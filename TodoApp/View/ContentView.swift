@@ -13,12 +13,6 @@ struct ContentView: View {
     
     @State private var showingAddTodoView: Bool = false
     
-    // @FetchRequest(
-    //     sortDescriptors: [NSSortDescriptor(keyPath: \Todo.name, ascending: true)],
-    //     animation: .default)
-    // private var todos: FetchedResults<Todo>
-    
-    // we are saving the todo items by name and storing them in ascending order in database and retrieving it and storing it to todos variable
     @FetchRequest(
         entity: Todo.entity(),
         sortDescriptors: [NSSortDescriptor(
@@ -28,29 +22,34 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(self.todos, id: \.self) {todo in
-                    HStack {
-                        Text(todo.name ?? "Unknown")
-                        Spacer()
-                        Text(todo.priority ?? "Unknown")
+            ZStack {
+                List {
+                    ForEach(self.todos, id: \.self) {todo in
+                        HStack {
+                            Text(todo.name ?? "Unknown")
+                            Spacer()
+                            Text(todo.priority ?? "Unknown")
+                        }
                     }
+                    .onDelete(perform: deleteTodo)
                 }
-                .onDelete(perform: deleteTodo)
-            }
-            .navigationBarTitle("Todo", displayMode: .inline)
-            .navigationBarItems(
-                leading: EditButton(),
-                trailing:
-                    Button(action: {
-                        self.showingAddTodoView.toggle()
-                    }){
-                        Image(systemName: "plus")
-                    }
-                    .sheet(isPresented: $showingAddTodoView) {
-                        AddTodoView().environment(\.managedObjectContext, self.managedObjectContext)
-                    }
+                .navigationBarTitle("Todo", displayMode: .inline)
+                .navigationBarItems(
+                    leading: EditButton(),
+                    trailing:
+                        Button(action: {
+                            self.showingAddTodoView.toggle()
+                        }){
+                            Image(systemName: "plus")
+                        }
+                        .sheet(isPresented: $showingAddTodoView) {
+                            AddTodoView().environment(\.managedObjectContext, self.managedObjectContext)
+                        }
             )
+                if todos.count == 0{
+                    EmptyListView()
+                }
+            }
         }
     }
     
