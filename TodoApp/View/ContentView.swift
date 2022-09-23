@@ -12,6 +12,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var managedObjectContext
     
     @State private var showingAddTodoView: Bool = false
+    @State private var animatingButton: Bool = false
     
     @FetchRequest(
         entity: Todo.entity(),
@@ -45,11 +46,48 @@ struct ContentView: View {
                         .sheet(isPresented: $showingAddTodoView) {
                             AddTodoView().environment(\.managedObjectContext, self.managedObjectContext)
                         }
-            )
+                )
                 if todos.count == 0{
                     EmptyListView()
                 }
             }
+            .sheet(isPresented: $showingAddTodoView) {
+                AddTodoView().environment(\.managedObjectContext, self.managedObjectContext)
+            }
+            .overlay(
+                ZStack {
+                    Group {
+                        Circle()
+                            .fill(.blue)
+                            .opacity(self.animatingButton ? 0.2 : 0)
+                            .scaleEffect(self.animatingButton ? 1 : 0)
+                            .frame(width: 68, height: 68, alignment: .center)
+                        
+                        Circle()
+                            .fill(.blue)
+                            .opacity(self.animatingButton ? 0.15 : 0)
+                            .scaleEffect(self.animatingButton ? 1 : 0)
+                            .frame(width: 88, height: 88, alignment: .center)
+                    }
+                    .animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: true))
+                    
+                    Button(action: {
+                        self.showingAddTodoView.toggle()
+                    }){
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .background(Circle().fill(Color("ColorBase")))
+                            .frame(width: 48, height: 48, alignment: .center)
+                    }
+                    .onAppear(perform: {
+                        self.animatingButton.toggle()
+                    })
+                }
+                    .padding(.bottom, 15)
+                    .padding(.trailing, 15)
+                , alignment: .bottomTrailing
+            )
         }
     }
     
