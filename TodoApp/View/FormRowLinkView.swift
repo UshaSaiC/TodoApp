@@ -30,6 +30,7 @@ struct FormRowLinkView: View {
                 .foregroundColor(.gray)
             Spacer()
             Button(action: {
+                // below code helps in opening an url from app
                 guard let url = URL(string: self.link), UIApplication.shared.canOpenURL(url) else {
                     return
                 }

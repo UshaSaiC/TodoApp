@@ -10,6 +10,7 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var managedObjectContext
+    @EnvironmentObject var iconSettings: IconNames
     
     @State private var showingAddTodoView: Bool = false
     @State private var animatingButton: Bool = false
@@ -47,6 +48,7 @@ struct ContentView: View {
                         }
                         .sheet(isPresented: $showingSettingsView) {
                             SettingsView()
+                                .environmentObject(self.iconSettings)
                         }
                 )
                 if todos.count == 0{
