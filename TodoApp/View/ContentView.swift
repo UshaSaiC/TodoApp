@@ -9,13 +9,14 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.managedObjectContext) private var managedObjectContext
+    
     @State private var showingAddTodoView: Bool = false
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Todo.id, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<Item>
+    private var items: FetchedResults<Todo>
     
     var body: some View {
         NavigationView {
@@ -31,7 +32,7 @@ struct ContentView: View {
                         Image(systemName: "plus")
                     }
                     .sheet(isPresented: $showingAddTodoView) {
-                        AddTodoView()
+                        AddTodoView().environment(\.managedObjectContext, self.managedObjectContext)
                     }
             )
         }
@@ -39,11 +40,11 @@ struct ContentView: View {
     
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newItem = Todo(context: managedObjectContext)
+            newItem.id = UUID()
             
             do {
-                try viewContext.save()
+                try managedObjectContext.save()
             } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
@@ -53,10 +54,10 @@ struct ContentView: View {
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { items[$0] }.forEach(managedObjectContext.delete)
             
             do {
-                try viewContext.save()
+                try managedObjectContext.save()
             } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
