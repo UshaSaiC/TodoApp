@@ -11,7 +11,7 @@ struct EmptyListView: View {
     
     @State private var isAnimated: Bool = false
     
-    @ObservedObject var theme = ThemeSettings()
+    @ObservedObject var theme = ThemeSettings.shared
     var themes: [Theme] = themeData
     
     let images: [String] = [
