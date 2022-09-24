@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var animatingButton: Bool = false
     @State private var showingSettingsView: Bool = false
     
-    @ObservedObject var theme = ThemeSettings()
+    @ObservedObject var theme = ThemeSettings.shared
     var themes: [Theme] = themeData
     
     @FetchRequest(
