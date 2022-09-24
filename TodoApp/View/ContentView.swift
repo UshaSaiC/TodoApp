@@ -16,6 +16,9 @@ struct ContentView: View {
     @State private var animatingButton: Bool = false
     @State private var showingSettingsView: Bool = false
     
+    @ObservedObject var theme = ThemeSettings()
+    var themes: [Theme] = themeData
+    
     @FetchRequest(
         entity: Todo.entity(),
         sortDescriptors: [NSSortDescriptor(
@@ -29,16 +32,29 @@ struct ContentView: View {
                 List {
                     ForEach(self.todos, id: \.self) {todo in
                         HStack {
+                            Circle()
+                                .frame(width: 12, height: 12, alignment: .center)
+                                .foregroundColor(self.colorize(priority: todo.priority ?? "Normal"))
                             Text(todo.name ?? "Unknown")
+                                .fontWeight(.semibold)
                             Spacer()
                             Text(todo.priority ?? "Unknown")
+                                .font(.footnote)
+                                .foregroundColor(Color(.systemGray2))
+                                .padding(3)
+                                .frame(minWidth: 62)
+                                .overlay(
+                                  Capsule().stroke(Color(UIColor.systemGray2), lineWidth: 0.75)
+                              )
                         }
+                        .padding(.vertical, 10)
                     }
                     .onDelete(perform: deleteTodo)
                 }
                 .navigationBarTitle("Todo", displayMode: .inline)
                 .navigationBarItems(
-                    leading: EditButton(),
+                    leading: EditButton().accentColor(themes[self
+                        .theme.themeSettings].themeColor),
                     trailing:
                         Button(action: {
                             self.showingSettingsView.toggle()
@@ -46,6 +62,8 @@ struct ContentView: View {
                             Image(systemName: "paintbrush")
                                 .imageScale(.large)
                         }
+                        .accentColor(themes[self
+                            .theme.themeSettings].themeColor)
                         .sheet(isPresented: $showingSettingsView) {
                             SettingsView()
                                 .environmentObject(self.iconSettings)
@@ -62,13 +80,13 @@ struct ContentView: View {
                 ZStack {
                     Group {
                         Circle()
-                            .fill(.blue)
+                            .fill(themes[self.theme.themeSettings].themeColor)
                             .opacity(self.animatingButton ? 0.2 : 0)
                             .scaleEffect(self.animatingButton ? 1 : 0)
                             .frame(width: 68, height: 68, alignment: .center)
                         
                         Circle()
-                            .fill(.blue)
+                            .fill(themes[self.theme.themeSettings].themeColor)
                             .opacity(self.animatingButton ? 0.15 : 0)
                             .scaleEffect(self.animatingButton ? 1 : 0)
                             .frame(width: 88, height: 88, alignment: .center)
@@ -84,6 +102,7 @@ struct ContentView: View {
                             .background(Circle().fill(Color("ColorBase")))
                             .frame(width: 48, height: 48, alignment: .center)
                     }
+                    .accentColor(themes[self.theme.themeSettings].themeColor)
                     .onAppear(perform: {
                         self.animatingButton.toggle()
                     })
@@ -93,20 +112,7 @@ struct ContentView: View {
                 , alignment: .bottomTrailing
             )
         }
-    }
-    
-    private func addItem() {
-        withAnimation {
-            let newItem = Todo(context: managedObjectContext)
-            newItem.id = UUID()
-            
-            do {
-                try managedObjectContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     private func deleteTodo(at offsets: IndexSet) {
@@ -121,14 +127,20 @@ struct ContentView: View {
             }
         }
     }
+    
+    private func colorize(priority: String) -> Color {
+        switch priority {
+        case "High":
+            return .pink
+        case "Normal":
+            return .green
+        case "Low":
+            return .blue
+        default:
+            return .gray
+        }
+    }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

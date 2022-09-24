@@ -12,6 +12,11 @@ struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var iconSettings: IconNames
     
+    let themes: [Theme] = themeData
+    
+    @ObservedObject var theme = ThemeSettings()
+    @State private var isThemeChanged: Bool = false
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .center, spacing: 0) {
@@ -56,13 +61,49 @@ struct SettingsView: View {
                                     if let error = error {
                                         print(error.localizedDescription)
                                     } else {
-                                        print("Sccess!!!!! You have changed the app icon")
+                                        print("Success!! You have changed the app icon")
                                     }
                                 }
                             }
                         }
                     }
                     .padding(.vertical, 3)
+                    
+                    Section(header:
+                                HStack {
+                        Text("Choose the app theme")
+                        Image(systemName: "circle.fill")
+                          .resizable()
+                          .frame(width: 10, height: 10)
+                          .foregroundColor(themes[self.theme.themeSettings].themeColor)
+                    }
+                    ) {
+                        List{
+                            ForEach(themes, id: \.id) { theme in
+                                Button(action: {
+                                    self.theme.themeSettings = theme.id
+                                    UserDefaults.standard.set(self.theme.themeSettings, forKey: "Theme")
+                                    self.isThemeChanged.toggle()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "circle.fill")
+                                            .foregroundColor(theme.themeColor)
+                                        
+                                        Text(theme.themeName)
+                                    }
+                                }
+                                .accentColor(.primary)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 3)
+                    .alert(isPresented: $isThemeChanged) {
+                        Alert(
+                            title: Text("Success!!!"),
+                            message: Text("App has been changed to the \(themes[self.theme.themeSettings].themeName). Now close and restart the app"),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                     
                     Section(header: Text("Follow us on social media")) {
                         FormRowLinkView(icon: "globe", color: .pink, text: "Website", link: "https://swiftuimasterclass.com")
@@ -102,6 +143,8 @@ struct SettingsView: View {
                 Color("ColorBackground")
                     .edgesIgnoringSafeArea(.all))
         }
+        .accentColor(themes[self.theme.themeSettings].themeColor)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

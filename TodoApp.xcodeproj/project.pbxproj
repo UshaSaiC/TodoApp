@@ -29,6 +29,9 @@
 		B20F50E628DE2ACB005A730E /* EmptyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20F50E528DE2ACB005A730E /* EmptyListView.swift */; };
 		B254DF4128DE55C200996AD6 /* IconNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = B254DF4028DE55C200996AD6 /* IconNames.swift */; };
 		B254DF4528DE66D200996AD6 /* SettingsImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B254DF4428DE66D200996AD6 /* SettingsImageView.swift */; };
+		B254DF4828DE6AED00996AD6 /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B254DF4728DE6AED00996AD6 /* ThemeModel.swift */; };
+		B254DF4A28DE6B7000996AD6 /* ThemeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B254DF4928DE6B7000996AD6 /* ThemeData.swift */; };
+		B254DF4C28DE6BB100996AD6 /* ThemeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B254DF4B28DE6BB100996AD6 /* ThemeSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +59,9 @@
 		B20F50E528DE2ACB005A730E /* EmptyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyListView.swift; sourceTree = "<group>"; };
 		B254DF4028DE55C200996AD6 /* IconNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconNames.swift; sourceTree = "<group>"; };
 		B254DF4428DE66D200996AD6 /* SettingsImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsImageView.swift; sourceTree = "<group>"; };
+		B254DF4728DE6AED00996AD6 /* ThemeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
+		B254DF4928DE6B7000996AD6 /* ThemeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeData.swift; sourceTree = "<group>"; };
+		B254DF4B28DE6BB100996AD6 /* ThemeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,7 @@
 		B20F50CD28DDAFA3005A730E /* TodoApp */ = {
 			isa = PBXGroup;
 			children = (
+				B254DF4628DE6ADB00996AD6 /* Theme */,
 				B254DF3F28DE55A900996AD6 /* Helpers */,
 				B20056AA28DE4FEB00983680 /* Icons */,
 				B20F50E428DE2A23005A730E /* Info.plist */,
@@ -145,6 +152,16 @@
 				B254DF4028DE55C200996AD6 /* IconNames.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B254DF4628DE6ADB00996AD6 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				B254DF4728DE6AED00996AD6 /* ThemeModel.swift */,
+				B254DF4928DE6B7000996AD6 /* ThemeData.swift */,
+				B254DF4B28DE6BB100996AD6 /* ThemeSettings.swift */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,8 +244,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B20056A528DE451E00983680 /* SettingsView.swift in Sources */,
+				B254DF4A28DE6B7000996AD6 /* ThemeData.swift in Sources */,
 				B20056A728DE489300983680 /* FormRowStaticView.swift in Sources */,
 				B20056A928DE4A7700983680 /* FormRowLinkView.swift in Sources */,
+				B254DF4828DE6AED00996AD6 /* ThemeModel.swift in Sources */,
 				B20F50D828DDAFA5005A730E /* Persistence.swift in Sources */,
 				B20F50D128DDAFA3005A730E /* ContentView.swift in Sources */,
 				B20F50E628DE2ACB005A730E /* EmptyListView.swift in Sources */,
@@ -236,6 +255,7 @@
 				B20F50DB28DDAFA5005A730E /* TodoApp.xcdatamodeld in Sources */,
 				B20F50E328DDAFD7005A730E /* AddTodoView.swift in Sources */,
 				B254DF4128DE55C200996AD6 /* IconNames.swift in Sources */,
+				B254DF4C28DE6BB100996AD6 /* ThemeSettings.swift in Sources */,
 				B254DF4528DE66D200996AD6 /* SettingsImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
